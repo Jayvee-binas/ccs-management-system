@@ -22,7 +22,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === "production"
-        ? ["ccs-management-system-tau.vercel.app"] // Add your production domain
+        ? ["https://ccs-management-system-tau.vercel.app"] // Add your production domain
         : ["http://localhost:3000", "http://127.0.0.1:3000"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -107,13 +107,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📡 API available at http://localhost:${PORT}/api`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log("📊 Health check: http://localhost:5000/api/health");
-});
+// Start server (only if not running on Vercel)
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📡 API available at http://localhost:${PORT}/api`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
+    console.log("📊 Health check: http://localhost:5000/api/health");
+  });
+}
 
 module.exports = app;
